@@ -22,6 +22,7 @@ const rl = readline.createInterface({ input: process.stdin, output: process.stdo
 
 function askQuestion() { 
     const tasksDisplay = array.map(task => task[1] === 0 ? `☐ ${task[0]}` : `☑ ${task[0]}`).join('\n');
+    let tasksList = []
     rl.question(`TODO:\n${tasksDisplay}\n__________________\n1. Add a task\n2. Delete a task\n3. Mark task done\n4. Exit\n`, answer => {
         answer = answer.trim()
         switch(answer) {
@@ -36,12 +37,22 @@ function askQuestion() {
 
             case "2": // Delete a task
                 console.clear()
-                const tasksList = array.map((task, index) => `${index + 1}. ${task[0]}`).join('\n');
+                tasksList = array.map((task, index) => `${index + 1}. ${task[0]}`).join('\n')
                 rl.question(`What do you want to delete? (Enter number)\n${tasksList}\n`, answer => {
                     const index = parseInt(answer) - 1;
                     if (index >= 0 && index < array.length) {
-                        array.splice(index, 1)}})
-            case "3":
+                        array.splice(index, 1)}
+                    askQuestion()})
+                    
+                    
+            case "3": // Mark done
+                console.clear()
+                tasksList = array.map((task, index) => `${index + 1}. ${task[0]}`).join('\n');
+                rl.question(`What do you want to mark done? (Enter number)\n${tasksList}\n`, answer => {
+                    const index = parseInt(answer) - 1;
+                    if (index >= 0 && index < array.length) {
+                        array[index][1] = 1
+                    askQuestion()}})
                 break
             case "4":
                 console.log("Exiting...")
